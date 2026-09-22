@@ -56,8 +56,6 @@ schwab-sre-assessment/
     └── grafana-dashboard.jpg
 ```
 
-**Not in this repository, by design**: `grafana-reader-sa-key.json` — the JSON key used to connect Grafana Cloud's BigQuery data source. This is a live credential and is intentionally excluded (add it to `.gitignore` before committing if you haven't already: `echo "*-sa-key.json" >> .gitignore`).
-
 ## Prerequisites
 
 - A GCP project with billing enabled (this was built against a new-account $300/90-day free trial)
