@@ -1,0 +1,39 @@
+# k8s/app-a/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-a
+spec:
+  replicas: 3
+  selector: { matchLabels: { app: web-app-a } }
+  template:
+    metadata: { labels: { app: web-app-a } }
+    spec:
+      containers:
+        - name: web-app-a
+          image: gcr.io/google-samples/hello-app:2.0   # swap for your own image
+          ports: [{ containerPort: 8080 }]
+          envFrom:
+            - configMapRef: { name: app-a-config }
+            - secretRef: { name: app-a-secret }
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { cpu: 250m, memory: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: web-app-a }
+spec:
+  selector: { app: web-app-a }
+  ports: [{ port: 80, targetPort: 8080 }]
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: web-app-a-hpa }
+spec:
+  scaleTargetRef: { apiVersion: apps/v1, kind: Deployment, name: web-app-a }
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 60 } }

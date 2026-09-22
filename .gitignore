@@ -1,0 +1,13 @@
+# Terraform
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfvars
+crash.log
+
+# Sensitive
+*-sa-key.json
+*.pem
+
+# OS
+.DS_Store

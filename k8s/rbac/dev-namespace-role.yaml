@@ -1,0 +1,29 @@
+# k8s/rbac/dev-namespace-role.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dev-namespace-admin
+  namespace: dev
+rules:
+  - apiGroups: ["", "apps", "autoscaling"]
+    resources: ["pods", "services", "configmaps", "secrets", "deployments", "replicasets", "horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-namespace-admin-binding
+  namespace: dev
+subjects:
+  - kind: User
+    name: dev-sa@schwab-sre-assessment.iam.gserviceaccount.com   # a real human dev's Google email works the same way
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: dev-namespace-admin
+  apiGroup: rbac.authorization.k8s.io
